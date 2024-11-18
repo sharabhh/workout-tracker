@@ -7,6 +7,7 @@ export default function HomeScreen() {
     <View className="flex justify-center items-center h-full w-full bg-pink-100">
       <Text>hello there</Text>
       <Link href="/(tabs)/Home">click here</Link>
+      <Link href="/auth/Login">Login</Link>
     </View>
   );
 }
