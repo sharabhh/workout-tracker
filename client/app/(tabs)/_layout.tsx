@@ -20,7 +20,7 @@ export default function TabLayout() {
           source={icon}
           resizeMode="contain"
           tintColor={color}
-          className="w-6 h-6"
+          className="w-7 h-7"
         />
         <Text
           className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
@@ -48,9 +48,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           title: "Home",
+          tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={Icons.home}
@@ -62,23 +63,25 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="workouts"
+        name="Workout"
         options={{
-          title: "Workouts",
+          title: "Workout",
+          tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={Icons.user}
               color={color}
-              name="Workouts"
+              name="Workout"
               focused={focused}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="Profile"
         options={{
           title: "Profile",
+          tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={Icons.user}
