@@ -10,35 +10,50 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import {BASE_URL} from "@env"
 
 const Login = () => {
-  // const statusHeight = StatusBar.currentHeight
   var areaView = Platform.OS === "android" ? `pt-10` : "0";
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("")
+  const router = useRouter();
 
+  // console.log(BASE_URL);
+  const baseUrl = BASE_URL
+  console.log(baseUrl);
+  
   async function handleSubmit() {
     try {
-      // const response = await axios.get("https://official-joke-api.appspot.com/random_joke"
-      // )
-      // console.log(response);
-      
-      // alert(response?.data?.punchline)
-    
       const data = {
         username,
         password,
       };
+      
       const response = await axios.post(
-        "http://192.168.29.7:3000/user/login",
+        `${baseUrl}user/login`,
         data
       );
-      console.log(response);
-      setToken(response?.data?.token)
-      
-    } catch (e) {
-      console.log(e);
+
+      if (response?.status === 200) {
+        const token = response?.data?.token;
+        await AsyncStorage.setItem("token", token);
+        router.push("/(tabs)/Home");
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e) && e.response) {
+        const status = e.response.status;
+        if (status === 401 || status === 400) {
+          setPassword("");
+          alert("incorrect credentials");
+        }
+        if (status === 404) {
+          setUserName("");
+          setPassword("");
+          alert("user doesn't exist");
+        }
+      }
     }
   }
 
@@ -64,7 +79,6 @@ const Login = () => {
             onChangeText={(text) => setPassword(text)}
           />
           <Button title="submit" onPress={handleSubmit} />
-          <Text>{token}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

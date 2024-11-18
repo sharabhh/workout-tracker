@@ -27,11 +27,11 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
 
     const userExists = await User.findOne({ username });
     if (!userExists) {
-      return res.status(401).json({ msg: "user doesn't exist" });
+      return res.status(404).json({ msg: "user doesn't exist" });
     }
 
     if (password !== userExists.password) {
-      return res.status(400).json({ msg: "incorrect password" });
+      return res.status(401).json({ msg: "incorrect password" });
     }
     const token = jwt.sign(
       { id: userExists._id, username: userExists.username },
