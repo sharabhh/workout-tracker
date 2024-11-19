@@ -2,13 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/index";
-import cors from "cors"
+import workoutRouter from "./routes/workout";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 app.use("/user", userRouter);
+app.use("/workout", workoutRouter);
 
 const port = process.env.PORT;
 const mongoUrl: string = process.env.MONGO_URL || "";
