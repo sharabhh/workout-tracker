@@ -1,9 +1,34 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchBox from "@/components/SearchBox";
 import Button from "@/components/Button";
+import axios, { AxiosHeaders } from "axios";
+import { BASE_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Workout = () => {
+  const [workouts, setWorkouts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchWorkouts() {
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}workout`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response);
+        setWorkouts(response.data);
+        setLoading(false);
+      }
+    }
+    fetchWorkouts();
+  }, []);
+
+  console.log(workouts);
+
   return (
     <View style={style.container}>
       <Text className="text-3xl font-semibold my-4">Your Workouts</Text>
@@ -17,164 +42,26 @@ const Workout = () => {
       </View>
 
       {/* main body */}
-      <ScrollView className="w-4/5" showsVerticalScrollIndicator={false}>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
+      {loading ? (
+        <View>
+          <Text>loading...</Text>
+        </View>
+      ) : (
+        <ScrollView className="w-4/5" showsVerticalScrollIndicator={false}>
+          <View className="p-4 bg-gray-400 rounded-xl mt-4">
+            <View className="w-full">
+              <View className="flex flex-row justify-between items-center">
+                <Text className="text-2xl text-white">Workout 1</Text>
+                <Text className="text-sm text-white">12/11/24</Text>
+              </View>
+              <View className="flex flex-row justify-start mt-1">
+                <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
+                <Text className="text-sm text-white">🔥 547</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-        <View className="p-4 bg-gray-400 rounded-xl mt-4">
-          <View className="w-full">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl text-white">Workout 1</Text>
-              <Text className="text-sm text-white">12/11/24</Text>
-            </View>
-            <View className="flex flex-row justify-start mt-1">
-              <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-              <Text className="text-sm text-white">🔥 547</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 };

@@ -3,9 +3,15 @@ import mongoose from "mongoose";
 import { User } from "../schema";
 import { userTypes } from "../types";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+
+dotenv.config()
+
 
 const router = express.Router();
-const jwtSecret = process.env.JWT_SECRET || "sample-string";
+const jwtSecret = process.env.JWT_SECRET || "verySifficultString";
+console.log(jwtSecret);
+
 
 router.get("/", (req, res) => {
   res.send("reached user route");
@@ -19,6 +25,7 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
       username,
       password,
     };
+console.log(jwtSecret);
 
     const zodValidation = userTypes.safeParse(userObj).success;
     if (!zodValidation) {
