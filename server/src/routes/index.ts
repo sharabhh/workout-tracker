@@ -4,6 +4,7 @@ import { User } from "../schema";
 import { userTypes } from "../types";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv"
+import { verifyJwt } from "../middleware/auth";
 
 dotenv.config()
 
@@ -11,10 +12,23 @@ dotenv.config()
 const router = express.Router();
 const jwtSecret = process.env.JWT_SECRET || "verySifficultString";
 console.log(jwtSecret);
+// @ts-ignore
+router.use(verifyJwt)
 
 
-router.get("/", (req, res) => {
-  res.send("reached user route");
+router.get("/", async (req: Request, res: Response): Promise<any> => {
+  const {username} = req.user
+
+  console.log("user is ", username);
+  
+  if(username){
+    const response = await User.findOne({username}, {password: 0})
+    console.log(response);
+    return res.status(200).json({data: response})
+  }
+
+  return res.status(404).json({msg: "user not found"})
+
 });
 
 router.post("/login", async (req: Request, res: Response): Promise<any> => {

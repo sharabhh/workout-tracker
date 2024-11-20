@@ -29,6 +29,10 @@ const Workout = () => {
 
   console.log(workouts);
 
+function handleSearch(){
+  
+}
+
   return (
     <View style={style.container}>
       <Text className="text-3xl font-semibold my-4">Your Workouts</Text>
@@ -37,7 +41,7 @@ const Workout = () => {
           <SearchBox />
         </View>
         <View style={style.buttonContainer}>
-          <Button />
+          <Button title="🔍" onPress={handleSearch} />
         </View>
       </View>
 

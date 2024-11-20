@@ -18,7 +18,6 @@ function verifyJwt(req: Request, res: Response, next: NextFunction) {
   }
 
   try {
-      console.log('middleware ran');
     const decoded = jwt.verify(token, secretKey || "verySifficultString");
     req.user = decoded;
     

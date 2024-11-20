@@ -34,7 +34,7 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
   const workout: any = [];
   userExists.forEach((item) => workout.push(item.workouts));
   console.log(workout);
-  res.json(workout)
+  res.json(workout);
 
   // const workouts = userExists.
 
@@ -68,9 +68,17 @@ router.get("/:username", async (req, res) => {
 
 router.post("/add", async (req: Request, res: Response): Promise<any> => {
   try {
-    const { username, workout } = req.body;
+    console.log("-------middleware verified now inside the function--------");
+
+    // console.log(req.body);
+
+    const workout = req.body;
+    const username = req.user.username;
+    console.log("username from headers on backend is ", username);
+
     // res.send(body);
-    // console.log(username, workouts);
+    console.log(username, workout);
+
     if (!username || !workout) {
       return res
         .status(400)
