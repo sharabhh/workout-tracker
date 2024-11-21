@@ -49,14 +49,14 @@ export default function TabLayout() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={Icons.home}
-              color={color}
-              name="Home"
-              focused={focused}
+            icon={Icons.home}
+            color={color}
+            name="Home"
+            focused={focused}
             />
           ),
         }}
-      />
+        />
       <Tabs.Screen
         name="Workout"
         options={{
@@ -64,7 +64,7 @@ export default function TabLayout() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={Icons.user}
+              icon={Icons.weight}
               color={color}
               name="Workout"
               focused={focused}
