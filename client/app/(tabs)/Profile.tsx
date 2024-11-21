@@ -10,13 +10,17 @@ import React, { useEffect, useState } from "react";
 import Icons from "@/constants/Icons";
 import Button from "@/components/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { BASE_URL } from "@env";
 import { userType } from "../types/typescriptTypes";
+import { useRouter } from "expo-router";
 
 const Profile = () => {
   const [user, setUser] = useState<userType | null>();
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const baseUrl = BASE_URL;
+
   const paddingTop =
     Platform.OS === "android" && StatusBar.currentHeight
       ? Math.ceil(StatusBar.currentHeight)
@@ -25,29 +29,41 @@ const Profile = () => {
   async function handlePress() {
     const token = await AsyncStorage.removeItem("token");
     console.log(token);
-    alert("deleted");
+    alert("logged out");
+    if (!(await AsyncStorage.getItem("token"))) {
+      router.push("/auth/Login");
+    }
   }
   useEffect(() => {
     async function fetchData() {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        const response = await axios.get(`${BASE_URL}user`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (token) {
+          const response = await axios.get(`${baseUrl}user`, {
+            headers: {
+              Authorization: token,
+            },
+          });
 
-        if (response?.status === 200) {
-          setUser(response?.data?.data);
-          setLoading(false);
-        } else if (response?.status === 500) {
+          if (response?.status === 200) {
+            setUser(response?.data?.data);
+            setLoading(false);
+          }
+        }
+      } catch (e) {
+        const response = e as AxiosError;
+        if (response?.status === 404) {
+          await AsyncStorage.removeItem("token");
+          router.push("/auth/Login");
+          alert("user not found");
+        } else {
           alert("server side error");
         }
+        console.log(e);
       }
     }
     fetchData();
   }, []);
-
 
   console.log(user);
 

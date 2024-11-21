@@ -15,4 +15,6 @@ const workoutDataSchema = z.object({
     .nonempty("Atleast one exercise is required."),
 });
 
+
+
 export default workoutDataSchema;

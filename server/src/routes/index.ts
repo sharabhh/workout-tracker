@@ -3,33 +3,35 @@ import mongoose from "mongoose";
 import { User } from "../schema";
 import { userTypes } from "../types";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import { verifyJwt } from "../middleware/auth";
 
-dotenv.config()
-
+dotenv.config();
 
 const router = express.Router();
 const jwtSecret = process.env.JWT_SECRET || "verySifficultString";
 console.log(jwtSecret);
 // @ts-ignore
-router.use(verifyJwt)
+// router.use(verifyJwt)
 
+router.get("/",verifyJwt,async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { username } = req.user;
 
-router.get("/", async (req: Request, res: Response): Promise<any> => {
-  const {username} = req.user
+      console.log("user is ", username);
 
-  console.log("user is ", username);
-  
-  if(username){
-    const response = await User.findOne({username}, {password: 0})
-    console.log(response);
-    return res.status(200).json({data: response})
+      if (username) {
+        const response = await User.findOne({ username }, { password: 0 });
+        console.log(response);
+        return res.status(200).json({ data: response });
+      }
+
+      return res.status(404).json({ msg: "user not found" });
+    } catch (e) {
+      return res.status(500).json({ msg: "server side error" });
+    }
   }
-
-  return res.status(404).json({msg: "user not found"})
-
-});
+);
 
 router.post("/login", async (req: Request, res: Response): Promise<any> => {
   try {
@@ -39,7 +41,7 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
       username,
       password,
     };
-console.log(jwtSecret);
+    // console.log(jwtSecret);
 
     const zodValidation = userTypes.safeParse(userObj).success;
     if (!zodValidation) {
@@ -61,7 +63,7 @@ console.log(jwtSecret);
     return res.status(200).json({ msg: "logged in", token });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ msg: "serevr error" });
+    return res.status(500).json({ msg: "serevr error" });
   }
 });
 
@@ -69,6 +71,7 @@ router.post("/signup", async (req: Request, res: Response): Promise<any> => {
   try {
     const { username, password } = req.body;
 
+    
     const userObj = {
       username,
       password,
@@ -82,7 +85,7 @@ router.post("/signup", async (req: Request, res: Response): Promise<any> => {
     const userExists = await User.findOne({ username });
 
     if (userExists) {
-      return res.status(401).json({ msg: "user already exists" });
+      return res.status(409).json({ msg: "user already exists" });
     }
 
     const createUser = await User.create({

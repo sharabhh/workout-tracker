@@ -1,5 +1,6 @@
 import React from "react";
 import { Stack } from "expo-router";
+import { StatusBar } from "react-native";
 
 const _layout = () => {
   return (
@@ -12,6 +13,7 @@ const _layout = () => {
           name="signup"
         />
       </Stack>
+      <StatusBar backgroundColor="black" />
     </>
   );
 };

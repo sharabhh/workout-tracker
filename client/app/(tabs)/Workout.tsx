@@ -5,15 +5,22 @@ import Button from "@/components/Button";
 import axios, { AxiosHeaders } from "axios";
 import { BASE_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { workoutType } from "../types/typescriptTypes";
+import formatDate from "@/utils/dateFormater";
+import { useRouter } from "expo-router";
 
 const Workout = () => {
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<workoutType[][]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
+  const baseUrl = BASE_URL
+  console.log(baseUrl);
+  
 
   useEffect(() => {
     async function fetchWorkouts() {
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}workout`, {
+      const response = await axios.get(`${baseUrl}workout`, {
         headers: {
           Authorization: token,
         },
@@ -23,11 +30,16 @@ const Workout = () => {
         setWorkouts(response.data);
         setLoading(false);
       }
+      else if(response.status=== 404){
+        router.push("/auth/Login")
+        alert("user doesn't exists/invalid session")
+      }
+      else{
+        alert("an error occured. Please check later.")
+      }
     }
     fetchWorkouts();
   }, []);
-
-  console.log(workouts);
 
 function handleSearch(){
   
@@ -52,11 +64,13 @@ function handleSearch(){
         </View>
       ) : (
         <ScrollView className="w-4/5" showsVerticalScrollIndicator={false}>
-          <View className="p-4 bg-gray-400 rounded-xl mt-4">
+          {workouts[0].map((workout, idx)=>(
+
+          <View className="p-4 bg-gray-400 rounded-xl mt-4" key={idx}>
             <View className="w-full">
               <View className="flex flex-row justify-between items-center">
-                <Text className="text-2xl text-white">Workout 1</Text>
-                <Text className="text-sm text-white">12/11/24</Text>
+                <Text className="text-2xl text-white">{workout?.name}</Text>
+                <Text className="text-sm text-white">{formatDate(workout?.date || "")}</Text>
               </View>
               <View className="flex flex-row justify-start mt-1">
                 <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
@@ -64,6 +78,7 @@ function handleSearch(){
               </View>
             </View>
           </View>
+          ))}
         </ScrollView>
       )}
     </View>
