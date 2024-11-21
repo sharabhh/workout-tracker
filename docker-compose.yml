@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "3000:3000" # Backend API exposed on port 3000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "8081:8081" # Metro Bundler exposed on port 8081
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "start"]
+
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017" # MongoDB exposed on port 27017
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

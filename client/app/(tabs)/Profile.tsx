@@ -11,7 +11,7 @@ import Icons from "@/constants/Icons";
 import Button from "@/components/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { BASE_URL } from "@env";
+// import { BASE_URL } from "@env";
 import { userType } from "../types/typescriptTypes";
 import { useRouter } from "expo-router";
 
@@ -19,7 +19,9 @@ const Profile = () => {
   const [user, setUser] = useState<userType | null>();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const baseUrl = BASE_URL;
+  const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
+  console.log("base url is");
+  
 
   const paddingTop =
     Platform.OS === "android" && StatusBar.currentHeight

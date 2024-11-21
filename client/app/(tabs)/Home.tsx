@@ -17,12 +17,12 @@ import Button from "@/components/Button";
 import ExerciseData from "@/components/ExerciseData";
 import workoutDataSchema from "../types/zod";
 import axios, { AxiosError } from "axios";
-import { BASE_URL } from "@env";
+// import { BASE_URL } from "@env";
 import { useRouter } from "expo-router";
 import { userType } from "../types/typescriptTypes";
 import formatDate from "@/utils/dateFormater";
 
-const baseUrl = BASE_URL;
+const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 const Home = () => {
   const [createWorkoutFlag, setCreateWorkoutFlag] = useState(false);
   const [user, setUser] = useState<userType | null>();

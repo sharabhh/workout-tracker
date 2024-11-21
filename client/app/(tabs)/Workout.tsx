@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import SearchBox from "@/components/SearchBox";
 import Button from "@/components/Button";
 import axios, { AxiosHeaders } from "axios";
-import { BASE_URL } from "@env";
+// import { BASE_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { workoutType } from "../types/typescriptTypes";
 import formatDate from "@/utils/dateFormater";
@@ -15,7 +15,7 @@ const Workout = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [latestOrder, setLatestOrder] = useState(true);
   const router = useRouter();
-  const baseUrl = BASE_URL;
+  const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
   console.log(baseUrl);
 
   async function fetchWorkouts() {
