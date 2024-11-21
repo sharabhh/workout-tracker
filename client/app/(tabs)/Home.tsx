@@ -197,7 +197,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
 
     const token = await AsyncStorage.getItem("token");
     if (verifyFormat.success && token) {
-      const response = await axios.post(`${BASE_URL}workout/add`, workoutData, {
+      const response = await axios.post(`${baseUrl}workout/add`, workoutData, {
         headers: {
           Authorization: token,
         },

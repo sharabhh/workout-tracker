@@ -60,6 +60,43 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
   // res.send("fetch all workouts route");
 });
 
+router.get(
+  "/search/:workoutName",
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      const username = req.user.username;
+      const workoutName = req.params.workoutName.toLowerCase();
+
+      const userExists = await User.findOne({ username });
+      if (!userExists) {
+        return res.status(404).json({ msg: "user doesn't exist" });
+      }
+
+      if (!userExists.workouts || userExists.workouts.length === 0) {
+        return res.status(404).json({ msg: "No workouts found" });
+      }
+
+      if (!workoutName) {
+        return res.status(200).json(userExists.workouts);
+      }
+
+      const filteredWorkouts = userExists.workouts.filter(
+        (workout) =>
+          workout &&
+          workout.name &&
+          workout.name.toLowerCase().startsWith(workoutName)
+      );
+      console.log("fileterd workouts are: ", filteredWorkouts);
+
+      res.json(filteredWorkouts);
+    } catch (e) {
+      console.log(e);
+
+      return res.status(500).json({ msg: "Internal server error" });
+    }
+  }
+);
+
 router.get("/:username", async (req, res) => {
   const username = req.params.username;
   const user = await User.find({ username });

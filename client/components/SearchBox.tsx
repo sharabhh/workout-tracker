@@ -2,11 +2,16 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import React from "react";
 import { TouchableHighlight } from "react-native";
 
-const SearchBox = () => {
+type ButtonProps = {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+};
+
+const SearchBox = ({searchTerm, setSearchTerm}: ButtonProps) => {
   return (
     <View>
       <TouchableHighlight style={style.container}>
-        <TextInput style={style.searchBox} placeholder="search workouts"></TextInput>
+        <TextInput className="py-2 px-4" style={style.searchBox} onChangeText={(text)=> setSearchTerm(text)} value={searchTerm} placeholder="search workouts"></TextInput>
       </TouchableHighlight>
     </View>
   );
