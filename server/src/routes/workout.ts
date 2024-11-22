@@ -103,21 +103,18 @@ router.post("/add", async (req: Request, res: Response): Promise<any> => {
 router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
   try {
     const workoutId = req.params.id;
-    const username = req.user.username; // Assuming the user is authenticated and username is available from the `verifyJwt` middleware.
+    const username = req.user.username;
 
-    // Validate input
     if (!workoutId) {
       return res.status(400).json({ msg: "Workout ID is required." });
     }
 
-    // Find the user
     const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ msg: "User not found." });
     }
 
-    // Find the workout in the user's workouts array and remove it
     const workoutIndex = user.workouts.findIndex(
       (workout: any) => workout._id.toString() === workoutId
     );
@@ -126,10 +123,8 @@ router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
       return res.status(404).json({ msg: "Workout not found." });
     }
 
-    // Remove the workout
     user.workouts.splice(workoutIndex, 1);
 
-    // Save the updated user
     await user.save();
 
     return res.status(200).json({ msg: "Workout deleted successfully." });
