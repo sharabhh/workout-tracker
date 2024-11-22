@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   Platform,
-  StatusBar,
   Button,
   TextInput,
   ScrollView,
@@ -13,7 +12,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-// import { BASE_URL } from "@env";
 
 const Login = () => {
   var areaView = Platform.OS === "android" ? `pt-10` : "0";
@@ -21,9 +19,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // console.log(BASE_URL);
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
-  console.log("base url is ",baseUrl);
 
   async function handleSubmit() {
     try {
@@ -93,6 +89,7 @@ const Login = () => {
           </Pressable>
         </View>
       </ScrollView>
+     
     </SafeAreaView>
   );
 };

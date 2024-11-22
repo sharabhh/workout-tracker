@@ -1,9 +1,8 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import SearchBox from "@/components/SearchBox";
 import Button from "@/components/Button";
-import axios, { AxiosHeaders } from "axios";
-// import { BASE_URL } from "@env";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { workoutType } from "../types/typescriptTypes";
 import formatDate from "@/utils/dateFormater";
@@ -16,7 +15,7 @@ const Workout = () => {
   const [latestOrder, setLatestOrder] = useState(true);
   const router = useRouter();
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
-  console.log(baseUrl);
+
 
   async function fetchWorkouts() {
     const token = await AsyncStorage.getItem("token");
@@ -26,7 +25,6 @@ const Workout = () => {
       },
     });
     if (response.status === 200) {
-      console.log(response);
       setWorkouts(response.data);
       setLoading(false);
     } else if (response.status === 404) {
@@ -50,15 +48,12 @@ const Workout = () => {
         Authorization: await AsyncStorage.getItem("token"),
       },
     });
-    console.log(response.data);
 
     if (response.status === 200) {
       setWorkouts([response.data]);
     }
-    console.log(response);
   }
 
-  console.log(searchTerm);
 
   function handleSortDate() {
     const sortedWorkouts = [...workouts[0]].reverse(); // Reverse the workouts to simulate sorting by date
@@ -68,7 +63,32 @@ const Workout = () => {
 
   function handleReset() {
     fetchWorkouts();
+    setSearchTerm("");
   }
+
+async function handleDelete(id: string){
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const response = await axios.delete(`${baseUrl}workout/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (response.status === 200) {
+      alert("Workout deleted successfully!");
+      
+      fetchWorkouts()
+     
+    } else {
+      alert("Failed to delete workout. Please try again.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("An error occurred while deleting the workout.");
+  }
+  
+}
 
   return (
     <View style={style.container}>
@@ -97,7 +117,7 @@ const Workout = () => {
         )}
         <Button title="Reset" onPress={handleReset} />
       </View>
-      {/* <Text className="text-sm">(reset will clear filters and searches)</Text> */}
+ 
 
       {/* main body */}
       {loading ? (
@@ -115,9 +135,16 @@ const Workout = () => {
                     {formatDate(workout?.date || "")}
                   </Text>
                 </View>
-                <View className="flex flex-row justify-start mt-1">
-                  <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-                  <Text className="text-sm text-white">🔥 547</Text>
+                <View className="flex-row justify-between mt-1 items-center">
+                  <View className="flex flex-row justify-start">
+                    <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
+                    <Text className="text-sm text-white">🔥 547</Text>
+                  </View>
+                  <Pressable onPress={() => handleDelete(workout._id || "")}>
+                    <View className="py-2 px-4 bg-red-600 rounded-xl">
+                      <Text>🗑️</Text>
+                    </View>
+                  </Pressable>
                 </View>
               </View>
             </View>
@@ -132,7 +159,6 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 36,
-    // justifyContent: 'center',
     alignItems: "center",
     width: "100%",
   },
@@ -142,8 +168,6 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 8,
     width: "100%",
-    // backgroundColor: "white",
-    // textAlign: "center",
     paddingVertical: 4,
     paddingHorizontal: 12,
   },

@@ -28,6 +28,7 @@ const style = StyleSheet.create({
   searchBox: {
     // width: 100,
     paddingHorizontal: 20,
+    paddingVertical: 8,
     borderRadius: 25,
     backgroundColor: '#f5f5f5'
   },

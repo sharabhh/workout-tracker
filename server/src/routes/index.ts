@@ -1,5 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
-import mongoose from "mongoose";
+import express, { Request, Response} from "express";
 import { User } from "../schema";
 import { userTypes } from "../types";
 import jwt from "jsonwebtoken";
@@ -10,19 +9,14 @@ dotenv.config();
 
 const router = express.Router();
 const jwtSecret = process.env.JWT_SECRET || "verySifficultString";
-console.log(jwtSecret);
 // @ts-ignore
-// router.use(verifyJwt)
 
 router.get("/",verifyJwt,async (req: Request, res: Response): Promise<any> => {
     try {
       const { username } = req.user;
 
-      console.log("user is ", username);
-
       if (username) {
         const response = await User.findOne({ username }, { password: 0 });
-        console.log(response);
         return res.status(200).json({ data: response });
       }
 
@@ -41,7 +35,6 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
       username,
       password,
     };
-    // console.log(jwtSecret);
 
     const zodValidation = userTypes.safeParse(userObj).success;
     if (!zodValidation) {
@@ -62,7 +55,6 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
     );
     return res.status(200).json({ msg: "logged in", token });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ msg: "serevr error" });
   }
 });
@@ -100,7 +92,6 @@ router.post("/signup", async (req: Request, res: Response): Promise<any> => {
       return res.status(201).json({ msg: "user created!", token });
     }
   } catch (e) {
-    console.log(e);
     res.status(500).json({ msg: "serevr error" });
   }
 });

@@ -17,7 +17,6 @@ import Button from "@/components/Button";
 import ExerciseData from "@/components/ExerciseData";
 import workoutDataSchema from "../types/zod";
 import axios, { AxiosError } from "axios";
-// import { BASE_URL } from "@env";
 import { useRouter } from "expo-router";
 import { userType } from "../types/typescriptTypes";
 import formatDate from "@/utils/dateFormater";
@@ -62,7 +61,6 @@ const Home = () => {
         } else {
           alert("server side error");
         }
-        console.log(e);
       }
     }
     fetchData();
@@ -72,10 +70,7 @@ const Home = () => {
   const lastWorkout = user?.workouts[user?.workouts?.length - 1];
 
   return (
-    <SafeAreaView
-      style={{ paddingTop }}
-      className={`h-full flex items-center w-full`}
-    >
+    <SafeAreaView style={{ paddingTop }} className={`h-full flex items-center`}>
       {loading ? (
         <Text>Loading...</Text>
       ) : (
@@ -98,7 +93,8 @@ const Home = () => {
                   <View className="items-center my-8">
                     <Text className="text-xl">Workouts coming soon!</Text>
                     <FlatList
-                      className="flex flex-row mt-4 ml-4"
+                      contentContainerStyle={{ paddingHorizontal: 16 }}
+                      className="flex flex-row mt-4"
                       data={[
                         { key: "Back" },
                         { key: "Chest" },
@@ -117,7 +113,6 @@ const Home = () => {
                   </View>
 
                   <View className="mx-4 mt-4">
-                    {/* <Text className="text-3xl">No workouts today</Text> */}
                     <Text className="text-2xl">Last workout</Text>
 
                     {lastWorkout ? (
@@ -140,7 +135,9 @@ const Home = () => {
                         </View>
                       </View>
                     ) : (
-                      <Text className="text-center mt-2 font-bold">No last workout found</Text>
+                      <Text className="text-center mt-2 font-bold">
+                        No last workout found
+                      </Text>
                     )}
                   </View>
                 </View>
@@ -169,6 +166,7 @@ type CreateWorkoutProps = {
 };
 
 function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
+  const router = useRouter();
   const [workoutData, setWorkoutData] = useState({
     name: "workout name",
     exercises: [
@@ -177,7 +175,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
         video: "",
         sets: null,
         reps: null,
-        weight: 0,
+        weight: null,
       },
     ],
   });
@@ -189,20 +187,33 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
     }));
   };
 
-  console.log(workoutData.name);
-
   async function handleFinish() {
-    const verifyFormat = workoutDataSchema.safeParse(workoutData);
-    console.log(verifyFormat);
+    try {
+      const verifyFormat = workoutDataSchema.safeParse(workoutData);
 
-    const token = await AsyncStorage.getItem("token");
-    if (verifyFormat.success && token) {
-      const response = await axios.post(`${baseUrl}workout/add`, workoutData, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      console.log(response);
+      const token = await AsyncStorage.getItem("token");
+      if (verifyFormat.success && token) {
+        const response = await axios.post(
+          `${baseUrl}workout/add`,
+          workoutData,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          router.push("/(tabs)/Workout");
+          alert("workout created");
+        }
+      }
+    } catch (e) {
+      const err = e as AxiosError;
+      const response = err.response;
+      if (response?.status === 500) {
+        alert("server side error, please try again later");
+      }
     }
   }
 
@@ -224,7 +235,6 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
     });
   };
 
-  console.log(workoutData);
 
   function handleAddExercise() {
     setWorkoutData((prev) => ({
@@ -236,7 +246,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
           video: "",
           sets: null,
           reps: null,
-          weight: 0,
+          weight: null,
         },
       ],
     }));
@@ -261,10 +271,10 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
         <Text className="text-xl font-semibold">Create a workout</Text>
         <Button title={"Finish"} onPress={handleFinish} />
       </View>
-      <View className="flex items-center my-4">
+      <View className="flex items-center mt-8 mb-4">
         <View className="w-4/5">
           <TextInput
-            className="border-b-[1px] px-8 rounded-3xl text-center"
+            className="border-b-[1px] px-8 text-center"
             placeholder="workout name"
             value={workoutData.name}
             onChangeText={handleNameChange}
@@ -272,7 +282,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
         </View>
 
         {workoutData.exercises.map((exercise, index) => (
-          <View key={index} className="w-4/5 mt-8">
+          <View key={index} className="w-4/5 mt-4">
             <ExerciseData
               exercise={exercise}
               index={index}
@@ -280,7 +290,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
             />
           </View>
         ))}
-        <View className="flex-row">
+        <View className="flex-row mb-8">
           <View className="mr-4">
             <Button
               title="Add Exercise"

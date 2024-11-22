@@ -1,26 +1,31 @@
-import { View, Text, Button, Platform, StatusBar, StyleSheet } from "react-native";
+import {
+  Button,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import Signup from '../auth/Signup';
 
 const paddingTop =
   Platform.OS === "android" && StatusBar.currentHeight
     ? Math.ceil(StatusBar.currentHeight)
     : 0;
 export default function HomeScreen() {
-  
   return (
-    <SafeAreaView className="flex justify-center items-center h-full w-full bg-pink-100" style={style.container}>
-      <Text>hello there</Text>
-      <Link href="/(tabs)/Home">click here</Link>
-      <Link href="/auth/Login">Login</Link>
-      <Link href="/(tabs)/Home">Home</Link>
+    <SafeAreaView
+      className="flex justify-center items-center h-full w-full bg-white"
+      style={style.container}
+    >
+      <Text className="text-3xl font-bold mb-8">Welcome to FitLogger!</Text>
+      <Link href="/auth/Login" className="px-8 py-4 bg-blue-500 rounded-xl"><Text className="text-white font-semibold">Login</Text></Link>
     </SafeAreaView>
   );
 }
 
 const style = StyleSheet.create({
-  container:{
-    paddingTop: paddingTop
-  }
-})
+  container: {
+    paddingTop: paddingTop,
+  },
+});

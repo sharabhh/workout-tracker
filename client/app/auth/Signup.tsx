@@ -11,7 +11,6 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "expo-router";
-// import { BASE_URL } from "@env";
 
 const Login = () => {
   var areaView = Platform.OS === "android" ? `pt-10` : "0";
@@ -19,9 +18,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // console.log(BASE_URL);
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
-  console.log(baseUrl);
 
   async function handleSubmit() {
     try {

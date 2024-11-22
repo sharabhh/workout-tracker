@@ -6,11 +6,7 @@ const secretKey = process.env.JWT_SECRET;
 
 function verifyJwt(req: Request, res: Response, next: NextFunction) {
   const token = req.header("Authorization");
-  console.log(token);
-  console.log(secretKey);
   
-  
-
   if (!token) {
     return res
       .status(401)

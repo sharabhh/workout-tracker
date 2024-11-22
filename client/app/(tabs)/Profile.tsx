@@ -10,8 +10,7 @@ import React, { useEffect, useState } from "react";
 import Icons from "@/constants/Icons";
 import Button from "@/components/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios, { AxiosError, AxiosResponse } from "axios";
-// import { BASE_URL } from "@env";
+import axios, { AxiosError } from "axios";
 import { userType } from "../types/typescriptTypes";
 import { useRouter } from "expo-router";
 
@@ -20,7 +19,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
-  console.log("base url is");
   
 
   const paddingTop =
@@ -30,7 +28,6 @@ const Profile = () => {
 
   async function handlePress() {
     const token = await AsyncStorage.removeItem("token");
-    console.log(token);
     alert("logged out");
     if (!(await AsyncStorage.getItem("token"))) {
       router.push("/auth/Login");
@@ -61,13 +58,11 @@ const Profile = () => {
         } else {
           alert("server side error");
         }
-        console.log(e);
       }
     }
     fetchData();
   }, []);
 
-  console.log(user);
 
   return (
     <SafeAreaView

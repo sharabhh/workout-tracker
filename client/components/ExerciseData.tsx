@@ -29,27 +29,27 @@ const ExerciseData = ({
       />
       <View className="flex-row justify-evenly items-center my-4">
         <TextInput
-          className="border px-4"
+          className="border px-4 text-center"
           placeholder="sets"
-          style={{ borderColor: "#939599" }}
+          style={{ borderColor: "#939599", width: 60 }}
           value={exercise.sets?.toString() || ""}
           onChangeText={(text) => updateExercise(index, "sets", Number(text))}
           keyboardType="numeric"
         />
         <Text className="mx-2">X</Text>
         <TextInput
-          className="border px-4"
+          className="border px-4 text-center"
           placeholder="reps"
-          style={{ borderColor: "#939599" }}
+          style={{ borderColor: "#939599", width: 60 }}
           value={exercise.reps?.toString() || ""}
           onChangeText={(text) => updateExercise(index, "reps", Number(text))}
           keyboardType="numeric"
         />
         <Text className="mx-2">X</Text>
         <TextInput
-          className="border px-4"
-          placeholder="weight (kg)"
-          style={{ borderColor: "#939599" }}
+          className="border px-4 text-center"
+          placeholder="weight"
+          style={{ borderColor: "#939599", width: 60 }}
           value={exercise.weight?.toString() || ""}
           onChangeText={(text) => updateExercise(index, "weight", Number(text))}
           keyboardType="numeric"

@@ -1,37 +1,34 @@
 import { Tabs } from "expo-router";
-import React from "react";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import Icons from "@/constants/Icons";
 import { View, Text, Image } from "react-native";
+import TabBarBackground from "@/components/ui/TabBarBackground";
+import Icons from "@/constants/Icons";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  const TabIcon = ({ icon, color, name, focused }: any) => {
-    return (
-      <View className="flex items-center justify-center gap-2">
-        <Image
-          source={icon}
-          resizeMode="contain"
-          tintColor={color}
-          className="w-7 h-7"
-        />
-        <Text
-          className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
-          style={{ color: color }}
-        >
-          {name}
-        </Text>
-      </View>
-    );
-  };
+  const TabIcon = ({ icon, color, name, focused }: any) => (
+    <View
+      className="flex items-center justify-center pt-6 gap-2"
+      style={{ width: 75, overflow: "visible" }}
+    >
+      <Image
+        source={icon}
+        resizeMode="contain"
+        tintColor={color}
+        className="w-7 h-7"
+      />
+      <Text
+        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        style={{ color: color }}
+        numberOfLines={1}
+      >
+        {name}
+      </Text>
+    </View>
+  );
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#FFA001",
-        // toBarInactiveTintColor: "#CDCDE0",
         headerShown: false,
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
@@ -49,14 +46,14 @@ export default function TabLayout() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-            icon={Icons.home}
-            color={color}
-            name="Home"
-            focused={focused}
+              icon={Icons.home}
+              color={color}
+              name="Home"
+              focused={focused}
             />
           ),
         }}
-        />
+      />
       <Tabs.Screen
         name="Workout"
         options={{
