@@ -11,7 +11,7 @@ powered by React Native.
 `git clone https://github.com/sharabhh/workout-tracker.git`
 `cd workout-tracker`
 - rename the '.env.example' files in both client and server to '.env'
-- run `docker-compose --build` from the root of the workout-tracker directory
+- run `docker-compose up --build` from the root of the workout-tracker directory
 - after everything is completed, either access the application on ExpoGo client on your mobile (recommended) or open [http://localhost:8081] on your machine
 
 ## Local Setup instructions (without Docker)
