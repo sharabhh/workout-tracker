@@ -16,7 +16,6 @@ const Workout = () => {
   const router = useRouter();
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 
-
   async function fetchWorkouts() {
     const token = await AsyncStorage.getItem("token");
     const response = await axios.get(`${baseUrl}workout`, {
@@ -54,7 +53,6 @@ const Workout = () => {
     }
   }
 
-
   function handleSortDate() {
     const sortedWorkouts = [...workouts[0]].reverse(); // Reverse the workouts to simulate sorting by date
     setWorkouts([sortedWorkouts]);
@@ -66,29 +64,27 @@ const Workout = () => {
     setSearchTerm("");
   }
 
-async function handleDelete(id: string){
-  try {
-    const token = await AsyncStorage.getItem("token");
-    const response = await axios.delete(`${baseUrl}workout/${id}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+  async function handleDelete(id: string) {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.delete(`${baseUrl}workout/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    if (response.status === 200) {
-      alert("Workout deleted successfully!");
-      
-      fetchWorkouts()
-     
-    } else {
-      alert("Failed to delete workout. Please try again.");
+      if (response.status === 200) {
+        alert("Workout deleted successfully!");
+
+        fetchWorkouts();
+      } else {
+        alert("Failed to delete workout. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while deleting the workout.");
     }
-  } catch (error) {
-    console.error(error);
-    alert("An error occurred while deleting the workout.");
   }
-  
-}
 
   return (
     <View style={style.container}>
@@ -111,13 +107,12 @@ async function handleDelete(id: string){
         ) : (
           <Button
             title="Latest first"
-            color="#9ca19e"
+            color="#5a5b5c"
             onPress={handleSortDate}
           />
         )}
         <Button title="Reset" onPress={handleReset} />
       </View>
- 
 
       {/* main body */}
       {loading ? (
@@ -126,29 +121,41 @@ async function handleDelete(id: string){
         </View>
       ) : (
         <ScrollView className="w-4/5" showsVerticalScrollIndicator={false}>
-          {workouts[0].map((workout, idx) => (
-            <View className="p-4 bg-gray-400 rounded-xl mt-4" key={idx}>
-              <View className="w-full">
-                <View className="flex flex-row justify-between items-center">
-                  <Text className="text-2xl text-white">{workout?.name}</Text>
-                  <Text className="text-sm text-white">
-                    {formatDate(workout?.date || "")}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between mt-1 items-center">
-                  <View className="flex flex-row justify-start">
-                    <Text className="text-sm text-white mr-4">⌚ 12:03</Text>
-                    <Text className="text-sm text-white">🔥 547</Text>
-                  </View>
-                  <Pressable onPress={() => handleDelete(workout._id || "")}>
-                    <View className="py-2 px-4 bg-red-600 rounded-xl">
-                      <Text>🗑️</Text>
+          {workouts.length === 0 ? (
+            <Text>No workouts yet</Text>
+          ) : (
+            <>
+              {workouts[0].map((workout, idx) => (
+                <View className="p-4 bg-gray-400 rounded-xl mt-4" key={idx}>
+                  <View className="w-full">
+                    <View className="flex flex-row justify-between items-center">
+                      <Text className="text-2xl text-white">
+                        {workout?.name}
+                      </Text>
+                      <Text className="text-sm text-white">
+                        {formatDate(workout?.date || "")}
+                      </Text>
                     </View>
-                  </Pressable>
+                    <View className="flex-row justify-between mt-1 items-center">
+                      <View className="flex flex-row justify-start">
+                        <Text className="text-sm text-white mr-4">
+                          ⌚ --:--
+                        </Text>
+                        <Text className="text-sm text-white">🔥 {Math.floor(Math.random() * (350 - 180 + 1)) + 180}</Text>
+                      </View>
+                      <Pressable
+                        onPress={() => handleDelete(workout._id || "")}
+                      >
+                        <View className="py-2 px-4 bg-red-600 rounded-xl">
+                          <Text>🗑️</Text>
+                        </View>
+                      </Pressable>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          ))}
+              ))}
+            </>
+          )}
         </ScrollView>
       )}
     </View>

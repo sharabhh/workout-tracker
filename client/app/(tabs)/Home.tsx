@@ -128,9 +128,9 @@ const Home = () => {
                           </View>
                           <View className="flex flex-row justify-start mt-1">
                             <Text className="text-sm text-white mr-4">
-                              ⌚ 12:03
+                              ⌚ --:--
                             </Text>
-                            <Text className="text-sm text-white">🔥 547</Text>
+                            <Text className="text-sm text-white">🔥 {Math.floor(Math.random() * (350 - 180 + 1)) + 180}</Text>
                           </View>
                         </View>
                       </View>
@@ -203,7 +203,7 @@ function CreateWorkout({ setCreateWorkoutFlag }: CreateWorkoutProps) {
           }
         );
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           router.push("/(tabs)/Workout");
           alert("workout created");
         }
